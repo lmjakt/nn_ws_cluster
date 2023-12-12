@@ -18,9 +18,9 @@ define.neighbors <- function(points, std, scale=TRUE){
         points <- matrix(as.double(points), nrow=nrow(points), ncol=ncol(points),
                          dimnames=list(rownames(points), colnames(points)))
     if(scale)
-        pts <- scale(pts)
-    nn <- .Call("nearest_neighbor", t(pts), std)
-    list(pts=pts, nbor=nn)
+        points <- scale(points)
+    nn <- .Call("nearest_neighbor", t(points), std)
+    list(pts=points, nbor=nn)
 }
 
 define.clusters <- function(nbors, max.d){
@@ -41,13 +41,14 @@ cluster.cols <- function(clusters){
 }
 
 draw.nn <- function(pts, pts.nn, max.d=0.25, dims=1:2, ar.lwd=1, ar.angle=10,
-                    ar.length=0.1, pch=19, cex=0.5, clust=NULL, asp=NA,
+                    ar.length=0.1, pch=19, cex=0.5, clust=NULL, asp=NA, draw.ar=TRUE,
                     ...){
     pts <- pts[,dims]
     plot(pts, asp=asp, type='n', ...)
     i <- which(pts.nn[,'nbor'] > 0 & pts.nn[,'dist'] < max.d)
     j <- pts.nn[i,'nbor']
-    arrows( pts[i,1], pts[i,2], pts[j,1], pts[j,2], lwd=ar.lwd, length=ar.length, angle=ar.angle )
+    if(draw.ar)
+        arrows( pts[i,1], pts[i,2], pts[j,1], pts[j,2], lwd=ar.lwd, length=ar.length, angle=ar.angle )
     if(is.null(clust))
         points(pts, cex=cex, pch=pch)
     if(!is.null(clust)){

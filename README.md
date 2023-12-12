@@ -78,3 +78,14 @@ to the function.
 ![Example of proteins clustered by the scores of alignments to two different
 descriptions of the same protein motif (SET-domain).](clustered_points.png)
 
+## Bugs
+
+There is an unfortunate problem if two points or more coexist at exactly the same point
+in space. Since they will have exactly the same density it is not possible to add
+them to the same cluster. The simple solution to allow addition of points that have
+larger than or equal density doesn't work as that immediately leads to circularity
+at these points. That means that a solution would need to keep track of all points that
+have been added to a cluster. Unfortunately I have not come up with a good solution to
+this problem. It is probably OK to simply add a little noise to the system or to detect
+points that have 0 distance between them and perturbing one of them a little bit. But
+that is not ideal either. 

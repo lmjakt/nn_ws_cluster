@@ -47,6 +47,8 @@ void nearest_neighbors(double *points, size_t n, size_t dim_n, double *neighbors
       if(i == j)
 	continue;
       double d = dist( pt1, points + dim_n * j, dim_n );
+      // This has to be >,
+      // as >= will allow circularity and will give rise to artefacts.
       if((min_dist < 0 || min_dist > d) && dens[j] > dens[i]){
 	min_dist = d;
 	min_dist_j = j;
@@ -108,6 +110,9 @@ void cluster_path(double *nbor_matrix, double max_distance, int *clusters, int n
       clusters[j] = current_cluster;
       path[path_n++] = j;
     }
+    // There is a problem if there are two or more points that sit on top of each other
+    // and where the point is a local density maximum. One of the points will not be
+    // added to the graph. 
   }
   free(path);
 }
